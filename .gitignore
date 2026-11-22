@@ -1,0 +1,6 @@
+build/
+dist/
+.vscode/
+airbot_play_control.egg-info
+tests/
+__pycache__/
