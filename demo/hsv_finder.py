@@ -8,7 +8,12 @@ parser.add_argument(
 )
 parser.add_argument("-g", "--go", action="store_true", help="go to the pick pose")
 parser.add_argument("-ng", "--not_go", action="store_true", help="go to the pick pose")
-parser.add_argument("-na", "--not_auto_detect", action="store_true", help="do not auto detect sim or real")
+parser.add_argument(
+    "-na",
+    "--not_auto_detect",
+    action="store_true",
+    help="do not auto detect sim or real",
+)
 args, unknown = parser.parse_known_args()
 
 
@@ -16,6 +21,7 @@ env_type = None
 if not args.not_auto_detect:
     try:
         import rospy
+
         sim_player_nums = rospy.get_param("/airbot_play/sim_player_nums", default=0)
         sim_type = "sim" if sim_player_nums == 1 else "real"
         env_type = rospy.get_param("/env_type", default=None) or sim_type

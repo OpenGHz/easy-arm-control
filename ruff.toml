@@ -1,0 +1,13 @@
+# The code base originally targeted Python 3.8 (ROS Noetic on Ubuntu 20.04)
+# and is also used on Python 3.12 (RoboStack); keep syntax 3.8-compatible.
+target-version = "py38"
+line-length = 88
+
+[format]
+line-ending = "lf"
+
+[lint]
+# Bug-class rules only: syntax errors, invalid comparisons, misplaced
+# statements, undefined names. Style rules are deliberately not enforced
+# so that formatting never requires code changes.
+select = ["E9", "F63", "F7", "F82"]
