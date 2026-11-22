@@ -1,6 +1,14 @@
+# build artefacts
 build/
 dist/
-.vscode/
 *.egg-info/
-tests/
 __pycache__/
+*.py[cod]
+
+# tool caches
+.pytest_cache/
+.ruff_cache/
+
+# editors
+.vscode/
+.idea/

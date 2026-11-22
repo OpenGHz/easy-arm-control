@@ -1,19 +1,18 @@
-<package>
-
+<?xml version="1.0"?>
+<package format="3">
   <name>easy_arm_control</name>
-  <version>0.3.0</version>
+  <version>2.0.0</version>
   <description>
-     easy_arm_control package based on moveit
+    High-level robotic arm control on top of MoveIt 1 (moveit_commander),
+    with AIRBOT Play defaults: pose/joint/Cartesian motion, keyboard and
+    joystick teleoperation, and a FollowJointTrajectory action server.
   </description>
-  <author email="thefoxfoxfox@outlook.com">han</author>
   <maintainer email="thefoxfoxfox@outlook.com">han</maintainer>
-
-  <license>BSD</license>
-
-  <url type="website">http://moveit.ros.org/</url>
+  <author email="thefoxfoxfox@outlook.com">han</author>
+  <license>MIT</license>
+  <url type="repository">https://github.com/OpenGHz/easy-arm-control</url>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <run_depend>moveit</run_depend>
-  <run_depend>trac_ik</run_depend>
-
+  <exec_depend>moveit</exec_depend>
+  <exec_depend>trac_ik</exec_depend>
 </package>

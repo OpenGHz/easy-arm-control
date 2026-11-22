@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "easy-arm-control"
+version = "2.0.0"
+description = "High-level robotic arm control on top of MoveIt 1 (moveit_commander), with AIRBOT Play defaults."
+license = "MIT"
+requires-python = ">=3.8"
+authors = [{ name = "GHz", email = "ghz23@mails.tsinghua.edu.cn" }]
+keywords = ["ros", "moveit", "robotic-arm", "airbot"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: POSIX :: Linux",
+    "Framework :: Robot Framework :: Library",
+]
+# ROS (rospy, moveit_commander, *_msgs) is provided by the ROS environment,
+# not by pip.
+dependencies = ["numpy", "pyserial", "robotics-tools"]
+
+[project.urls]
+Repository = "https://github.com/OpenGHz/easy-arm-control"
+
+[tool.hatch.build.targets.wheel]
+# airbot_play_control is the deprecated alias of easy_arm_control.
+packages = ["easy_arm_control", "airbot_play_control"]

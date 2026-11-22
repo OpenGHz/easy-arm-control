@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install pre-commit
+      - run: pre-commit run --all-files --show-diff-on-failure
+
+  ros-noetic:
+    # Python 3.8 / apt ROS Noetic, the environment the code was written for.
+    runs-on: ubuntu-latest
+    container: ros:noetic-ros-base
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends python3-pip ros-noetic-moveit-commander
+          python3 -m pip install --upgrade pip
+          python3 -m pip install ./pkgs pytest
+      - name: Build catkin package
+        run: |
+          source /opt/ros/noetic/setup.bash
+          mkdir -p /tmp/ws/src
+          ln -s "$GITHUB_WORKSPACE" /tmp/ws/src/easy_arm_control
+          cd /tmp/ws && catkin_make
+          source devel/setup.bash
+          rospack find easy_arm_control
+      - name: Smoke tests
+        run: |
+          source /opt/ros/noetic/setup.bash
+          python3 -m pytest -v tests
