@@ -8,7 +8,7 @@ version = "2.0.0"
 description = "High-level robotic arm control on top of MoveIt 1 (moveit_commander), with AIRBOT Play defaults."
 license = "MIT"
 requires-python = ">=3.8"
-authors = [{ name = "GHz", email = "ghz23@mails.tsinghua.edu.cn" }]
+authors = [{ name = "GHz", email = "thefoxfoxfox@outlook.com" }]
 keywords = ["ros", "moveit", "robotic-arm", "airbot"]
 classifiers = [
     "Programming Language :: Python :: 3",
