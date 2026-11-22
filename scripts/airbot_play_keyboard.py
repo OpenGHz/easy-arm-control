@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rospy
-from airbot_play_control.control import RoboticArmAgent, ChooseGripper
+from easy_arm_control.control import RoboticArmAgent, ChooseGripper
 import argparse
 import json
 

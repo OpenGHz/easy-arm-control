@@ -1,9 +1,9 @@
 <package>
 
-  <name>airbot_play_control_upper</name>
+  <name>easy_arm_control</name>
   <version>0.3.0</version>
   <description>
-     airbot_play_control_upper package based on moveit
+     easy_arm_control package based on moveit
   </description>
   <author email="thefoxfoxfox@outlook.com">han</author>
   <maintainer email="thefoxfoxfox@outlook.com">han</maintainer>

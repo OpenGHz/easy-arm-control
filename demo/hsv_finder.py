@@ -31,7 +31,7 @@ else:
     sim_type: str = args.device
 
 if sim_type in ["sim"] or args.go or env_type == "mujoco":
-    from airbot_play_control.control import RoboticArmAgent, ChooseGripper
+    from easy_arm_control.control import RoboticArmAgent, ChooseGripper
     import rospy
 
     # ROS节点初始化(仿真自动控制机械臂到抓取位置)

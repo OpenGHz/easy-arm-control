@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import rospy
-from airbot_play_control.control import RoboticArmAgent, AirbotPlayConfig
+from easy_arm_control.control import RoboticArmAgent, AirbotPlayConfig
 import numpy as np
 from sensor_msgs.msg import Joy
 from IPython import embed
