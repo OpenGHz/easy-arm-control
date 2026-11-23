@@ -47,10 +47,10 @@ cd .. && catkin build && source devel/setup.bash
 **键盘遥操作**
 
 ```bash
-rosrun easy_arm_control airbot_play_keyboard.py --init_pose configs/control/real.json
+rosrun easy_arm_control airbot_play_keyboard.py --init_pose configs/control/real.yaml
 ```
 
-`--init_pose` 可以是 `forward`、`pick`、JSON 配置文件路径，或逗号分隔的 `x,y,z,roll,pitch,yaw`。启动后会打印按键说明（`?` 键可再次查看）。
+`--init_pose` 可以是 `forward`、`pick`、配置文件路径（`.yaml`，也支持 `.json`），或逗号分隔的 `x,y,z,roll,pitch,yaw`。启动后会打印按键说明（`?` 键可再次查看）。
 
 **Python API**（摘自 `demo/simple_api_example.ipynb`）
 

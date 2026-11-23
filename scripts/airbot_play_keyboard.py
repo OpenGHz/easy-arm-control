@@ -4,6 +4,9 @@ import rospy
 from easy_arm_control.control import RoboticArmAgent, ChooseGripper
 import argparse
 import json
+import os
+
+CONFIG_EXTS = (".yaml", ".yml", ".json")
 
 
 def parse_config(path):
@@ -11,7 +14,12 @@ def parse_config(path):
     grasp_z = None
 
     with open(path, "r") as f:
-        config = json.load(f)
+        if path.endswith(".json"):
+            config = json.load(f)
+        else:  # YAML (comments allowed)
+            import yaml
+
+            config = yaml.safe_load(f)
     try:
         position_x = config["PICK_POSITION_X"]
         position_y = config["PICK_POSITION_Y"]
@@ -43,7 +51,7 @@ if __name__ == "__main__":
         "--init_pose",
         action="store",
         type=str,
-        help="forward, pick or json file path",
+        help="forward, pick, a config file path (.yaml/.json) or x,y,z,roll,pitch,yaw",
         default="",
     )  # 若要控制移动建议先到forward/pick姿态，避免Home姿态下的奇异点
     parser.add_argument(
@@ -66,7 +74,7 @@ if __name__ == "__main__":
     other_config = None
     sim_type = args.sim_type
     init_pose = args.init_pose
-    use_config = ".json" in init_pose
+    use_config = os.path.splitext(init_pose)[1].lower() in CONFIG_EXTS
 
     if args.fake:
         other_config = ("", "airbot_play_arm")
@@ -93,7 +101,7 @@ if __name__ == "__main__":
     elif "," in init_pose:
         pick_pose = [float(i) for i in init_pose.split(",")]
     elif init_pose != "":
-        raise ValueError("init_pose should be forward, pick or json file path")
+        raise ValueError("init_pose should be forward, pick, a config file path (.yaml/.json) or x,y,z,roll,pitch,yaw")
     if init_pose != "":
         pick_joint = arm.change_pose_to_joints(pick_pose)
         arm.go_to_named_or_joint_target(pick_joint, sleep_time=1)
@@ -122,7 +130,7 @@ if __name__ == "__main__":
                 arm.go_to_single_axis_target(2, grasp_z, sleep_time=1)
             else:
                 print(
-                    "Please use json file to set grasp position using PICK_GRASP_Z key"
+                    "Please use a config file to set grasp position using PICK_GRASP_Z key"
                 )
         elif key == "f":
             if use_config:
@@ -138,7 +146,7 @@ if __name__ == "__main__":
                     print("  PICK_POSE:", pick_pose)
                     print("  PICK_GRASP_Z:", grasp_z)
             else:
-                print("Please use json file to configure")
+                print("Please use a config file to configure")
         elif key == "?":
             if use_config:
                 print_config_instruction()
