@@ -5,7 +5,11 @@ try:  # 导入ROS包
     from shape_msgs.msg import SolidPrimitive
     from sensor_msgs.msg import JointState
     from std_msgs.msg import Header
-    from moveit_commander import MoveGroupCommander, RobotCommander
+    from moveit_commander import (
+        MoveGroupCommander,
+        MoveItCommanderException,
+        RobotCommander,
+    )
     from moveit_msgs.msg import (
         RobotState,
         Constraints,
@@ -93,6 +97,34 @@ class MoveItBasicController(MoveGroupCommander):
         self.__ns = ns
         self.__fk_service = rospy.ServiceProxy(self.__ns + "/compute_fk", GetPositionFK)
         self.__ik_service = rospy.ServiceProxy(self.__ns + "/compute_ik", GetPositionIK)
+
+    # monotonic time of the last failed fetch of the current robot state
+    _state_lost_at = float("-inf")
+    STATE_LOST_HOLD = 1.0  # s: pose targets fail at once this long after a failed fetch
+
+    def set_joint_value_target(self, arg1, arg2=None, arg3=None):
+        """MoveGroupCommander.set_joint_value_target; for a pose target, first check
+        that the current robot state can be fetched.
+
+        For a pose target MoveIt (1.1) starts the IK from the current robot state. When
+        it cannot fetch one (no joint states for 1 s: the arm service, the bridge node or
+        the simulation stopped), it dereferences a null state and the whole process
+        segfaults. Raise instead, so the caller sees a failed IK and the program can
+        report the lost connection.
+
+        A failed fetch blocks for 1 s without releasing the GIL (MoveIt's Python
+        binding), so IK retries (10 in a row in RoboticArmAgent) would stall every other
+        thread, e.g. a watchdog, for seconds. Within STATE_LOST_HOLD of a failed fetch,
+        fail at once.
+        """
+        if isinstance(arg1, (Pose, PoseStamped)):
+            msg = "没有机械臂的当前状态（关节状态 1 秒没有更新），无法求逆解"
+            if time.monotonic() - self._state_lost_at < self.STATE_LOST_HOLD:
+                raise MoveItCommanderException(msg)
+            if not self.get_current_joint_values():
+                self._state_lost_at = time.monotonic()
+                raise MoveItCommanderException(msg)
+        return super().set_joint_value_target(arg1, arg2, arg3)
 
     def get_link_names(self) -> list:
         return self.__link_names
