@@ -20,19 +20,24 @@ def parse_config(path):
             import yaml
 
             config = yaml.safe_load(f)
+
+    def get(key):
+        # Lower-case key names (pick_position_x, ...); older configs use upper case (PICK_POSITION_X, ...).
+        return config[key] if key in config else config[key.upper()]
+
     try:
-        position_x = config["PICK_POSITION_X"]
-        position_y = config["PICK_POSITION_Y"]
-        position_z = config["PICK_POSITION_Z"]
-        rotation_roll = config["PICK_ROLL"]
-        rotation_pitch = config["PICK_PITCH"]
-        rotation_yaw = config["PICK_YAW"]
+        position_x = get("pick_position_x")
+        position_y = get("pick_position_y")
+        position_z = get("pick_position_z")
+        rotation_roll = get("pick_roll")
+        rotation_pitch = get("pick_pitch")
+        rotation_yaw = get("pick_yaw")
         pick_pose = [position_x, position_y, position_z] + [
             rotation_roll,
             rotation_pitch,
             rotation_yaw,
         ]
-        grasp_z = config["PICK_GRASP_Z"]
+        grasp_z = get("pick_grasp_z")
     except Exception as e:
         print(e)
 
@@ -40,7 +45,7 @@ def parse_config(path):
 
 
 def print_config_instruction():
-    print("  移动到PICK_GRASP_Z高度：g键")
+    print("  移动到pick_grasp_z高度：g键")
     print("  刷新配置(修改配置后需手动刷新生效)：f键")
 
 
@@ -126,11 +131,11 @@ if __name__ == "__main__":
             arm.go_to_named_or_joint_target(pick_joint, sleep_time=1)
         elif key == "g":
             if use_config:
-                print("Move to PICK_GRASP_Z height")
+                print("Move to pick_grasp_z height")
                 arm.go_to_single_axis_target(2, grasp_z, sleep_time=1)
             else:
                 print(
-                    "Please use a config file to set grasp position using PICK_GRASP_Z key"
+                    "Please use a config file to set grasp position using the pick_grasp_z key"
                 )
         elif key == "f":
             if use_config:
@@ -143,8 +148,8 @@ if __name__ == "__main__":
                     grasp_z = grasp_z_tmp
                     pick_joint = arm.change_pose_to_joints(pick_pose)
                     print("Config refreshed:")
-                    print("  PICK_POSE:", pick_pose)
-                    print("  PICK_GRASP_Z:", grasp_z)
+                    print("  pick pose:", pick_pose)
+                    print("  pick_grasp_z:", grasp_z)
             else:
                 print("Please use a config file to configure")
         elif key == "?":
