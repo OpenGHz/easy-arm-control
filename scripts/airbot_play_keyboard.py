@@ -106,7 +106,9 @@ if __name__ == "__main__":
     elif "," in init_pose:
         pick_pose = [float(i) for i in init_pose.split(",")]
     elif init_pose != "":
-        raise ValueError("init_pose should be forward, pick, a config file path (.yaml/.json) or x,y,z,roll,pitch,yaw")
+        raise ValueError(
+            "init_pose should be forward, pick, a config file path (.yaml/.json) or x,y,z,roll,pitch,yaw"
+        )
     if init_pose != "":
         pick_joint = arm.change_pose_to_joints(pick_pose)
         arm.go_to_named_or_joint_target(pick_joint, sleep_time=1)
